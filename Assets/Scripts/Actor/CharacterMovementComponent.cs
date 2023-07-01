@@ -4,7 +4,6 @@ using UnityEngine;
 public enum JumpState { Grounded, Rising, Hanging, Falling };
 public class CharacterMovementComponent : MonoBehaviour
 {
-
     public event CharacterLanded OnCharacterLanded;
 
     [HideInInspector] public bool Interrupted;

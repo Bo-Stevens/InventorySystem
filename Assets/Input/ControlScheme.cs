@@ -53,6 +53,24 @@ public partial class @ControlScheme : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Inventory"",
+                    ""type"": ""Button"",
+                    ""id"": ""21b34f30-b048-4369-89ec-b48da8e1c015"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Interact"",
+                    ""type"": ""Button"",
+                    ""id"": ""01d5ee38-0f35-4620-ad14-9d160f54d3b3"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -132,6 +150,28 @@ public partial class @ControlScheme : IInputActionCollection2, IDisposable
                     ""action"": ""Attack"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""78b7e12a-7fe6-4661-a883-23838cdc19cf"",
+                    ""path"": ""<Keyboard>/i"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard And Mouse"",
+                    ""action"": ""Inventory"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""26c3f9bd-234b-4676-bc57-6b8cc32f7786"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Interact"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -155,6 +195,8 @@ public partial class @ControlScheme : IInputActionCollection2, IDisposable
         m_Combat_Jump = m_Combat.FindAction("Jump", throwIfNotFound: true);
         m_Combat_Movement = m_Combat.FindAction("Movement", throwIfNotFound: true);
         m_Combat_Attack = m_Combat.FindAction("Attack", throwIfNotFound: true);
+        m_Combat_Inventory = m_Combat.FindAction("Inventory", throwIfNotFound: true);
+        m_Combat_Interact = m_Combat.FindAction("Interact", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -217,6 +259,8 @@ public partial class @ControlScheme : IInputActionCollection2, IDisposable
     private readonly InputAction m_Combat_Jump;
     private readonly InputAction m_Combat_Movement;
     private readonly InputAction m_Combat_Attack;
+    private readonly InputAction m_Combat_Inventory;
+    private readonly InputAction m_Combat_Interact;
     public struct CombatActions
     {
         private @ControlScheme m_Wrapper;
@@ -224,6 +268,8 @@ public partial class @ControlScheme : IInputActionCollection2, IDisposable
         public InputAction @Jump => m_Wrapper.m_Combat_Jump;
         public InputAction @Movement => m_Wrapper.m_Combat_Movement;
         public InputAction @Attack => m_Wrapper.m_Combat_Attack;
+        public InputAction @Inventory => m_Wrapper.m_Combat_Inventory;
+        public InputAction @Interact => m_Wrapper.m_Combat_Interact;
         public InputActionMap Get() { return m_Wrapper.m_Combat; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -242,6 +288,12 @@ public partial class @ControlScheme : IInputActionCollection2, IDisposable
                 @Attack.started -= m_Wrapper.m_CombatActionsCallbackInterface.OnAttack;
                 @Attack.performed -= m_Wrapper.m_CombatActionsCallbackInterface.OnAttack;
                 @Attack.canceled -= m_Wrapper.m_CombatActionsCallbackInterface.OnAttack;
+                @Inventory.started -= m_Wrapper.m_CombatActionsCallbackInterface.OnInventory;
+                @Inventory.performed -= m_Wrapper.m_CombatActionsCallbackInterface.OnInventory;
+                @Inventory.canceled -= m_Wrapper.m_CombatActionsCallbackInterface.OnInventory;
+                @Interact.started -= m_Wrapper.m_CombatActionsCallbackInterface.OnInteract;
+                @Interact.performed -= m_Wrapper.m_CombatActionsCallbackInterface.OnInteract;
+                @Interact.canceled -= m_Wrapper.m_CombatActionsCallbackInterface.OnInteract;
             }
             m_Wrapper.m_CombatActionsCallbackInterface = instance;
             if (instance != null)
@@ -255,6 +307,12 @@ public partial class @ControlScheme : IInputActionCollection2, IDisposable
                 @Attack.started += instance.OnAttack;
                 @Attack.performed += instance.OnAttack;
                 @Attack.canceled += instance.OnAttack;
+                @Inventory.started += instance.OnInventory;
+                @Inventory.performed += instance.OnInventory;
+                @Inventory.canceled += instance.OnInventory;
+                @Interact.started += instance.OnInteract;
+                @Interact.performed += instance.OnInteract;
+                @Interact.canceled += instance.OnInteract;
             }
         }
     }
@@ -273,5 +331,7 @@ public partial class @ControlScheme : IInputActionCollection2, IDisposable
         void OnJump(InputAction.CallbackContext context);
         void OnMovement(InputAction.CallbackContext context);
         void OnAttack(InputAction.CallbackContext context);
+        void OnInventory(InputAction.CallbackContext context);
+        void OnInteract(InputAction.CallbackContext context);
     }
 }

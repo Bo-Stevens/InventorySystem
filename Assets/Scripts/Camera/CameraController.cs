@@ -4,8 +4,14 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
+    public static CameraController Instance;
     [SerializeField] GameObject following;
     [SerializeField] Vector2 cameraOffsetFromCenter;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
     // Start is called before the first frame update
     void Start()
     {
