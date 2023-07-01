@@ -5,13 +5,14 @@ using UnityEngine;
 public class InputManager : MonoBehaviour
 {
     public static InputManager Instance;
-    public PlayerInputActionSet InputActionSet;
+    public ControlScheme InputActionSet;
 
     // Start is called before the first frame update
     void Awake()
     {
         Instance = this;
-        InputActionSet = new PlayerInputActionSet();
+        InputActionSet = new ControlScheme();
+        
         InputActionSet.Combat.Enable();
     }
 

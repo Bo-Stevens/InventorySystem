@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class PlayerMovementComponent : CharacterMovementComponent
 {
-    //Vector2 movementDirection;
-
     //TEMPORARY
     public static PlayerMovementComponent Instance;
 
@@ -31,6 +29,7 @@ public class PlayerMovementComponent : CharacterMovementComponent
 
     void PlayerJump(InputAction.CallbackContext context)
     {
+        Debug.Log("Jump key pressed!");
         Jump();
     }
 
