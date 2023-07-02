@@ -311,7 +311,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1872757b0bdcd5e40bb282a4e5b0521d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DebugCircleSprite: {fileID: 21300000, guid: d4a1388a0d4ee9c44bcaa86e463a7b39, type: 3}
+  DebugCircleSprite: {fileID: 21300000, guid: 04082a14d2239ea42834e7a45164aa10, type: 3}
 --- !u!1 &179413312
 GameObject:
   m_ObjectHideFlags: 0
@@ -424,7 +424,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 199751257}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.7963718, y: 0.023084685, z: -0.012728639}
+  m_LocalPosition: {x: 7.796372, y: 2.0230846, z: -0.012728639}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3383,7 +3383,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc36686177f58df42b6a98fa1f4b7cb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MovementComponent: {fileID: 1389226478}
+  Inventory:
+    InventoryDimensions: {x: 0, y: 0}
 --- !u!1 &1555211795
 GameObject:
   m_ObjectHideFlags: 0

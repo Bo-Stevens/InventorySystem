@@ -5,8 +5,12 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] PlayerMovementComponent MovementComponent;
-    // Start is called before the first frame update
+    public Inventory Inventory;
+
+    private void Awake()
+    {
+        Inventory.InitializeInventory();
+    }
     void Start()
     {
         InputManager.Instance.InputActionSet.Combat.Inventory.performed += OpenInventory;
