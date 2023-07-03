@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55985d0d351782343ad23be8cd21a72a, type: 3}
   m_Name: Shovel
   m_EditorClassIdentifier: 
-  MaximumStackAmount: 0
-  ItemConsoleIcon: 
+  MaximumStackAmount: 1
+  ItemConsoleIcon: S

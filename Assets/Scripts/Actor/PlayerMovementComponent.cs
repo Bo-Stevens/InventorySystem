@@ -29,7 +29,6 @@ public class PlayerMovementComponent : CharacterMovementComponent
 
     void PlayerJump(InputAction.CallbackContext context)
     {
-        Debug.Log("Jump key pressed!");
         Jump();
     }
 

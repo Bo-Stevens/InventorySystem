@@ -7,14 +7,11 @@ public class PlayerController : MonoBehaviour
 {
     public Inventory Inventory;
 
-    private void Awake()
-    {
-        Inventory.InitializeInventory();
-    }
     void Start()
     {
         InputManager.Instance.InputActionSet.Combat.Inventory.performed += OpenInventory;
         InputManager.Instance.InputActionSet.Combat.Interact.performed += Interact;
+        Inventory.PrintInventoryContentsToConsole();
     }
     
     void OpenInventory(InputAction.CallbackContext context)

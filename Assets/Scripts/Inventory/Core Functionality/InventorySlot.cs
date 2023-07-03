@@ -2,18 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InventorySlot : MonoBehaviour
+public class InventorySlot
 {
     public Item Item;
-    // Start is called before the first frame update
-    void Start()
+    public InventorySlot(Item Item)
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        this.Item = Item;
     }
 }
