@@ -18,9 +18,4 @@ public class UtilityManager : MonoBehaviour
             itemsToInit[i].Initialize();
         }
     }
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

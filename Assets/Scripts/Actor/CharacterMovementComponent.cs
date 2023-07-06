@@ -85,13 +85,11 @@ public class CharacterMovementComponent : MonoBehaviour
         if (jumpState != JumpState.Grounded)
         {
             EvaluateJumpState();
-            velocity = new Vector3(velocity.x, velocity.y - (gravitationForce * characterWeight / 100f));
+            velocity = new Vector3(velocity.x, velocity.y - (gravitationForce * characterWeight * Time.deltaTime));
         }
 
         Vector3 movementAmount = Util.SnapToNearestPixel(velocity, 32f);
         transform.position += movementAmount * Time.deltaTime;
-        //transform.position = SnapToNearestPixel(transform.position + velocity * Time.deltaTime, 32);
-        //transform.position += velocity * Time.deltaTime;
     }
 
     protected void Jump()

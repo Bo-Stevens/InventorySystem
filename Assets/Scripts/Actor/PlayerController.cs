@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour
     
     void OpenInventory(InputAction.CallbackContext context)
     {
-
+        Inventory.PrintInventoryContentsToConsole();
     }
 
     void Interact(InputAction.CallbackContext context)
