@@ -13,6 +13,7 @@ public class UtilityManager : MonoBehaviour
     void InitializeCustomScripts()
     {
         List<Initializable> itemsToInit = Initializable.ItemsToInitialze;
+        Debug.Log(itemsToInit.Count);
         for(int i = 0; i < itemsToInit.Count; i++)
         {
             itemsToInit[i].Initialize();

@@ -15,15 +15,15 @@ public class PlayerMovementComponent : CharacterMovementComponent
 
     private void Start()
     {
-        InputManager.Instance.InputActionSet.Combat.Jump.performed += PlayerJump;
-        InputManager.Instance.InputActionSet.Combat.Attack.performed += Attacked;
+        InputManager.InputActionSet.Combat.Jump.performed += PlayerJump;
+        InputManager.InputActionSet.Combat.Attack.performed += Attacked;
         OnCharacterLanded += Landed;
         Init();
     }
 
     private void FixedUpdate()
     {
-        MovementDirection = InputManager.Instance.InputActionSet.Combat.Movement.ReadValue<Vector2>();
+        MovementDirection = InputManager.InputActionSet.Combat.Movement.ReadValue<Vector2>();
         SetVelocity(new Vector3(MovementDirection.x * MovementSpeed, GetVelocity().y));
     }
 
