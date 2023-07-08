@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Null Item
   m_EditorClassIdentifier: 
   MaximumStackAmount: 1
-  ItemConsoleIcon: ' '
+  ItemConsoleIcon: E

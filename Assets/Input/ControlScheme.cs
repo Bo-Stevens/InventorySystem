@@ -187,6 +187,33 @@ public partial class @ControlScheme : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Move"",
+                    ""type"": ""Value"",
+                    ""id"": ""f3bec16a-b5e0-445c-9053-7e32bb4a8dc3"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Select"",
+                    ""type"": ""Button"",
+                    ""id"": ""963c5e58-814f-411c-b079-a8dff55d5473"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Split"",
+                    ""type"": ""Button"",
+                    ""id"": ""18cceb44-d548-460d-a8d3-4accf1782558"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -209,6 +236,83 @@ public partial class @ControlScheme : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Escape"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""2D Vector"",
+                    ""id"": ""25a5f3fc-026a-4462-bd3d-ba80f28439b4"",
+                    ""path"": ""2DVector(mode=1)"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""Up"",
+                    ""id"": ""927c375c-03a6-4b5e-8fbc-da9361d8d619"",
+                    ""path"": ""<Keyboard>/upArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""Down"",
+                    ""id"": ""a71a32bb-7576-4b47-942a-8c788a7e9ad4"",
+                    ""path"": ""<Keyboard>/downArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""Left"",
+                    ""id"": ""43fa434d-5256-43ba-9c87-59432d4d41e9"",
+                    ""path"": ""<Keyboard>/leftArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""Right"",
+                    ""id"": ""cd160c37-4508-48ff-a55f-3a6ff32a915a"",
+                    ""path"": ""<Keyboard>/rightArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""835f00c5-7acc-4385-b193-528f55e86469"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Select"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""fe2886a5-9711-45d5-b7db-3b3baafc2736"",
+                    ""path"": ""<Keyboard>/ctrl"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Split"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -239,6 +343,9 @@ public partial class @ControlScheme : IInputActionCollection2, IDisposable
         // Inventory
         m_Inventory = asset.FindActionMap("Inventory", throwIfNotFound: true);
         m_Inventory_Escape = m_Inventory.FindAction("Escape", throwIfNotFound: true);
+        m_Inventory_Move = m_Inventory.FindAction("Move", throwIfNotFound: true);
+        m_Inventory_Select = m_Inventory.FindAction("Select", throwIfNotFound: true);
+        m_Inventory_Split = m_Inventory.FindAction("Split", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -364,11 +471,17 @@ public partial class @ControlScheme : IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Inventory;
     private IInventoryActions m_InventoryActionsCallbackInterface;
     private readonly InputAction m_Inventory_Escape;
+    private readonly InputAction m_Inventory_Move;
+    private readonly InputAction m_Inventory_Select;
+    private readonly InputAction m_Inventory_Split;
     public struct InventoryActions
     {
         private @ControlScheme m_Wrapper;
         public InventoryActions(@ControlScheme wrapper) { m_Wrapper = wrapper; }
         public InputAction @Escape => m_Wrapper.m_Inventory_Escape;
+        public InputAction @Move => m_Wrapper.m_Inventory_Move;
+        public InputAction @Select => m_Wrapper.m_Inventory_Select;
+        public InputAction @Split => m_Wrapper.m_Inventory_Split;
         public InputActionMap Get() { return m_Wrapper.m_Inventory; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -381,6 +494,15 @@ public partial class @ControlScheme : IInputActionCollection2, IDisposable
                 @Escape.started -= m_Wrapper.m_InventoryActionsCallbackInterface.OnEscape;
                 @Escape.performed -= m_Wrapper.m_InventoryActionsCallbackInterface.OnEscape;
                 @Escape.canceled -= m_Wrapper.m_InventoryActionsCallbackInterface.OnEscape;
+                @Move.started -= m_Wrapper.m_InventoryActionsCallbackInterface.OnMove;
+                @Move.performed -= m_Wrapper.m_InventoryActionsCallbackInterface.OnMove;
+                @Move.canceled -= m_Wrapper.m_InventoryActionsCallbackInterface.OnMove;
+                @Select.started -= m_Wrapper.m_InventoryActionsCallbackInterface.OnSelect;
+                @Select.performed -= m_Wrapper.m_InventoryActionsCallbackInterface.OnSelect;
+                @Select.canceled -= m_Wrapper.m_InventoryActionsCallbackInterface.OnSelect;
+                @Split.started -= m_Wrapper.m_InventoryActionsCallbackInterface.OnSplit;
+                @Split.performed -= m_Wrapper.m_InventoryActionsCallbackInterface.OnSplit;
+                @Split.canceled -= m_Wrapper.m_InventoryActionsCallbackInterface.OnSplit;
             }
             m_Wrapper.m_InventoryActionsCallbackInterface = instance;
             if (instance != null)
@@ -388,6 +510,15 @@ public partial class @ControlScheme : IInputActionCollection2, IDisposable
                 @Escape.started += instance.OnEscape;
                 @Escape.performed += instance.OnEscape;
                 @Escape.canceled += instance.OnEscape;
+                @Move.started += instance.OnMove;
+                @Move.performed += instance.OnMove;
+                @Move.canceled += instance.OnMove;
+                @Select.started += instance.OnSelect;
+                @Select.performed += instance.OnSelect;
+                @Select.canceled += instance.OnSelect;
+                @Split.started += instance.OnSplit;
+                @Split.performed += instance.OnSplit;
+                @Split.canceled += instance.OnSplit;
             }
         }
     }
@@ -412,5 +543,8 @@ public partial class @ControlScheme : IInputActionCollection2, IDisposable
     public interface IInventoryActions
     {
         void OnEscape(InputAction.CallbackContext context);
+        void OnMove(InputAction.CallbackContext context);
+        void OnSelect(InputAction.CallbackContext context);
+        void OnSplit(InputAction.CallbackContext context);
     }
 }

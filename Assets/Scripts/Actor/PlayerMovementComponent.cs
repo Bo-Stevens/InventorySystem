@@ -15,6 +15,8 @@ public class PlayerMovementComponent : CharacterMovementComponent
 
     private void Start()
     {
+        if (InputManager.InputActionSet == null) Debug.LogWarning("Null");
+        if (InputManager.InputActionSet.Combat.Jump == null) Debug.LogWarning("Null");
         InputManager.InputActionSet.Combat.Jump.performed += PlayerJump;
         InputManager.InputActionSet.Combat.Attack.performed += Attacked;
         OnCharacterLanded += Landed;

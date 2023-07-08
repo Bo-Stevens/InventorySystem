@@ -12,17 +12,17 @@ public class PlayerController : MonoBehaviour
         InputManager.InputActionSet.Combat.Inventory.performed += OpenInventory;
         InputManager.InputActionSet.Combat.Interact.performed += Interact;
         InputManager.InputActionSet.Inventory.Escape.performed += CloseInventory;
-        Inventory.PrintInventoryContentsToConsole();
+        Inventory.RefreshInventoryText();
     }
     
     void OpenInventory(InputAction.CallbackContext context)
     {
         InputManager.ChangeActionMap(InputManager.InputActionSet.Inventory);
-        Inventory.PrintInventoryContentsToConsole();
+        Inventory.OpenInventory();
     }
     void CloseInventory(InputAction.CallbackContext context)
     {
-        Debug.Log("Closing Inventory");
+        Inventory.CloseInventory();
         InputManager.ChangeActionMap(InputManager.InputActionSet.Combat);
     }
 
