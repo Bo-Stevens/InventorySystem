@@ -90,7 +90,6 @@ public class Inventory : Initializable
         hoveredSlot = ItemSlots[hoveredSlotPosition.y][hoveredSlotPosition.x];
         RefreshInventoryText();
     }
-
     void SwapItemsInSlots(InventorySlot from, InventorySlot to)
     {
         Item tempItem = from.Item;

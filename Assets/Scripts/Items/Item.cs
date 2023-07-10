@@ -6,6 +6,7 @@ using UnityEngine;
 public class Item : ScriptableObject
 {
     [Min(1)] public int MaximumStackAmount = 1;
+    public Sprite itemSprite;
     public string ItemConsoleIcon;
 
     public void OnUse()

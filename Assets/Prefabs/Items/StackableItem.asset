@@ -10,7 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 55985d0d351782343ad23be8cd21a72a, type: 3}
-  m_Name: Bread
+  m_Name: StackableItem
   m_EditorClassIdentifier: 
-  MaximumStackAmount: 100
+  MaximumStackAmount: 64
+  itemSprite: {fileID: 0}
   ItemConsoleIcon: B
