@@ -6,44 +6,45 @@ using UnityEngine;
 [ExecuteAlways]
 public class DebugCircleRenderer : MonoBehaviour
 {
-    [SerializeField] bool active;
-
-
     [Min(0.1f)] public float radius;
-    LineRenderer lineRenderer;
+    [HideInInspector] public LineRenderer lineRenderer;
     float oldRadius;
 
     [Min(4)] [SerializeField] int segments = 50;
 
-
-    private void Awake()
+    private void OnEnable()
     {
         lineRenderer = GetComponent<LineRenderer>();
 
         lineRenderer.positionCount = segments + 1;
         lineRenderer.useWorldSpace = false;
-        lineRenderer.widthMultiplier = 0.1f;
-
-        CreatePoints();
+        StartCoroutine(AddRendererToList());
     }
+
+    IEnumerator AddRendererToList()
+    {
+        if (DebugManager.Instance.CircleRenderers.Contains(this)) yield break;
+        yield return null;
+        DebugManager.Instance.CircleRenderers.Add(this);
+    }
+
     private void OnValidate()
     {
-        if (!active) { lineRenderer.enabled = false; return; }
-        else lineRenderer.enabled = true;
-        if(lineRenderer.positionCount == segments + 1 && oldRadius == radius) return;
+        if (lineRenderer == null || lineRenderer.positionCount == segments + 1 && oldRadius == radius) return;
         oldRadius = radius;
         lineRenderer.positionCount = segments + 1;
-        lineRenderer.widthMultiplier = 0.1f;
 
         CreatePoints();
     }
-    void CreatePoints()
+    public void CreatePoints()
     {
-        float circleProgress = 0f;
-        float currentRadian = 0f;
-        float x = 0f;
-        float y = 0f;
-        for(int i = 0; i < segments + 1; i++)
+        float circleProgress;
+        float currentRadian;
+        float x;
+        float y;
+        lineRenderer.widthMultiplier = DebugManager.Instance.DebugLineWidth;
+
+        for (int i = 0; i < segments + 1; i++)
         {
             circleProgress = i / (float) segments;
             currentRadian = Mathf.PI * 2f * circleProgress;
@@ -53,7 +54,7 @@ public class DebugCircleRenderer : MonoBehaviour
         }
         currentRadian = Mathf.PI * 2f * 1.05f;
         x = radius;
-        y = .05f;
+        y = .2f * lineRenderer.widthMultiplier;
         lineRenderer.SetPosition(lineRenderer.positionCount - 1, new Vector3(x, y, 0));
     }
 

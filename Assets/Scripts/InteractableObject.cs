@@ -17,10 +17,4 @@ public class InteractableObject : MonoBehaviour
 
 
     }
-
-    private void OnGUI()
-    {
-        Rect toDraw = new Rect(transform.position - Vector3.one * interactionRadius, Vector2.one * interactionRadius * 2);
-        Graphics.DrawTexture(toDraw, InventoryDebugManager.Instance.DebugCircleSprite.texture);
-    }
 }
