@@ -2,19 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(DebugCircleRenderer))]
+[ExecuteAlways]
 public class InteractableObject : MonoBehaviour
 {
-    public float interactionRadius;
-    // Start is called before the first frame update
-    void Start()
+    [Min(0)]public float InteractionRadius;
+    DebugCircleRenderer circleRenderer;
+    private void OnEnable()
     {
-        
+        circleRenderer = GetComponent<DebugCircleRenderer>();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnValidate()
     {
+        StartCoroutine(UpdateRadius());
+    }
 
-
+    IEnumerator UpdateRadius()
+    {
+        yield return null;
+        circleRenderer.SetRadius(InteractionRadius);
     }
 }
