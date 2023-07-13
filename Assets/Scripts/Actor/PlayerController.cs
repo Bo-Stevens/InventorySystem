@@ -5,7 +5,9 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+     public List<InteractableObject> InteractablesInRange;
     public Inventory Inventory;
+
 
     void Start()
     {

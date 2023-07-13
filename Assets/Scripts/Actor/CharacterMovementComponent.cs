@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 public enum JumpState { Grounded, Rising, Hanging, Falling };
+[RequireComponent(typeof(Rigidbody2D))]
 public class CharacterMovementComponent : MonoBehaviour
 {
     public event CharacterLanded OnCharacterLanded;
@@ -45,8 +46,8 @@ public class CharacterMovementComponent : MonoBehaviour
         halfHeight = spriteRenderer.sprite.rect.height / spriteRenderer.sprite.pixelsPerUnit;
         characterCollider = GetComponent<Collider2D>();
         contactFilter = new ContactFilter2D();
-
         contactFilter.NoFilter();
+        GetComponent<Rigidbody2D>().isKinematic = true;
         contactFilter.layerMask = LayerMask.NameToLayer("Projectile");
 
         directionChanged += DirectionChanged;
@@ -146,6 +147,8 @@ public class CharacterMovementComponent : MonoBehaviour
         {
             if (collisions[i] == null) continue;
             if (collisions[i] == characterCollider) continue;
+            if (collisions[i].tag != "MovementBlocking") continue;
+            if (collisions[i].isTrigger) continue;
             ColliderDistance2D distance = collisions[i].Distance(characterCollider);
             if (distance.isOverlapped)
             {
