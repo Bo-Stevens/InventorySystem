@@ -5,10 +5,14 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-     public List<InteractableObject> InteractablesInRange;
+    public static PlayerController Instance;
+    public List<InteractableObject> InteractablesInRange;
     public Inventory Inventory;
 
-
+    private void OnEnable()
+    {
+        Instance = this;
+    }
     void Start()
     {
         InputManager.InputActionSet.Combat.Inventory.performed += OpenInventory;
@@ -16,7 +20,20 @@ public class PlayerController : MonoBehaviour
         InputManager.InputActionSet.Inventory.Escape.performed += CloseInventory;
         Inventory.RefreshInventoryText();
     }
-    
+    private void Update()
+    {
+
+    }
+    public IEnumerator Cycle()
+    {
+        while(InteractablesInRange.Count > 0 && DebugManager.Instance.DebugLinesActive)
+        {
+            yield return null;
+            DebugManager.Instance.HighlightClosestDebugCircle(transform.position);
+        }
+        yield return null;
+        DebugManager.Instance.HighlightClosestDebugCircle(transform.position);
+    }
     void OpenInventory(InputAction.CallbackContext context)
     {
         InputManager.ChangeActionMap(InputManager.InputActionSet.Inventory);
@@ -27,9 +44,11 @@ public class PlayerController : MonoBehaviour
         Inventory.CloseInventory();
         InputManager.ChangeActionMap(InputManager.InputActionSet.Combat);
     }
-
     void Interact(InputAction.CallbackContext context)
     {
-
+        if (InteractablesInRange.Count == 0) return;
+        InteractableObject closestObject = DebugManager.Instance.FindClosestOverlappingInteractable(InteractablesInRange);
+        closestObject.Interact();
     }
+
 }

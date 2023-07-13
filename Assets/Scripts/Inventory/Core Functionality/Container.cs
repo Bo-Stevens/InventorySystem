@@ -14,7 +14,7 @@ public class Container : InteractableObject
 
     public override void Interact()
     {
-
+        Debug.Log("You interacted with " + gameObject.name);
     }
 
 }

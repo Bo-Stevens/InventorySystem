@@ -8,6 +8,7 @@ public class DebugCircleRenderer : MonoBehaviour
 {
     [HideInInspector] public LineRenderer lineRenderer;
     [HideInInspector] public Color color;
+    [HideInInspector] public Color baseColor;
     float oldRadius;
     float radius;
     int segments;
@@ -25,6 +26,7 @@ public class DebugCircleRenderer : MonoBehaviour
         lineRenderer.material = DebugManager.Instance.DebugLineMaterial;
         if (DebugManager.Instance.CircleRenderers.Contains(this)) yield break;
         DebugManager.Instance.CircleRenderers.Add(this);
+        baseColor = lineRenderer.sharedMaterial.color;
     }
 
     private void OnValidate()
@@ -52,12 +54,12 @@ public class DebugCircleRenderer : MonoBehaviour
             currentRadian = Mathf.PI * 2f * circleProgress;
             x = Mathf.Cos(currentRadian) * radius;
             y = Mathf.Sin(currentRadian) * radius;
-            lineRenderer.SetPosition(i, new Vector3(x, y, -10));
+            lineRenderer.SetPosition(i, new Vector3(x, y, -5));
         }
         currentRadian = Mathf.PI * 2f * 1.05f;
         x = radius;
         y = .2f * lineRenderer.widthMultiplier;
-        lineRenderer.SetPosition(lineRenderer.positionCount - 1, new Vector3(x, y, -10));
+        lineRenderer.SetPosition(lineRenderer.positionCount - 1, new Vector3(x, y, -5));
     }
 
     public void SetRadius(float newRadius)

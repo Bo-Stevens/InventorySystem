@@ -48,6 +48,7 @@ public class CharacterMovementComponent : MonoBehaviour
         contactFilter = new ContactFilter2D();
         contactFilter.NoFilter();
         GetComponent<Rigidbody2D>().isKinematic = true;
+        GetComponent<Rigidbody2D>().simulated = true;
         contactFilter.layerMask = LayerMask.NameToLayer("Projectile");
 
         directionChanged += DirectionChanged;

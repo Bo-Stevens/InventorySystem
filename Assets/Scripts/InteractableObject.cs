@@ -22,7 +22,6 @@ public abstract class InteractableObject : MonoBehaviour
     private void OnValidate()
     {
         StartCoroutine(UpdateRadius());
-
     }
 
     IEnumerator UpdateRadius()
@@ -31,14 +30,15 @@ public abstract class InteractableObject : MonoBehaviour
         circleRenderer.SetRadius(InteractionRadius);
         circleCollider.radius = InteractionRadius;
     }
-
+   
     private void OnTriggerEnter2D(Collider2D other)
     {
-
         PlayerController player = other.GetComponent<PlayerController>();
         if (player == null) return;
         player.InteractablesInRange.Add(this);
+        if (player.InteractablesInRange.Count == 1) player.StartCoroutine(player.Cycle());
     }
+
 
     private void OnTriggerExit2D(Collider2D other)
     {
@@ -46,6 +46,11 @@ public abstract class InteractableObject : MonoBehaviour
         if (player == null) return;
         player.InteractablesInRange.Remove(this);
     }
-
+    
     public abstract void Interact();
+    
+    public DebugCircleRenderer GetCircleRenderer()
+    {
+        return circleRenderer;
+    }
 }
