@@ -36,13 +36,11 @@ public class PlayerController : MonoBehaviour
     }
     void OpenInventory(InputAction.CallbackContext context)
     {
-        InputManager.ChangeActionMap(InputManager.InputActionSet.Inventory);
         Inventory.OpenInventory();
     }
     void CloseInventory(InputAction.CallbackContext context)
     {
-        Inventory.CloseInventory();
-        InputManager.ChangeActionMap(InputManager.InputActionSet.Combat);
+        Inventory.CloseOpenInventory();
     }
     void Interact(InputAction.CallbackContext context)
     {

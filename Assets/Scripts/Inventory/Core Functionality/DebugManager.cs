@@ -43,7 +43,6 @@ public class DebugManager : MonoBehaviour
 
     public void HighlightClosestDebugCircle(Vector3 around)
     {
-
         if(highlightedDebugCollider != null) highlightedDebugCollider.GetCircleRenderer().lineRenderer.material.color = highlightedDebugCollider.GetCircleRenderer().baseColor;
 
         if (PlayerController.Instance.InteractablesInRange.Count == 0) return;

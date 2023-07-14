@@ -13,6 +13,7 @@ public class Inventory : Initializable
     [SerializeField] Item itemToAdd;
     [SerializeField] Item nullItem;
     [SerializeField] InventoryUIComponent uiComponent;
+    static Inventory activeInventory;
     
     Vector2Int hoveredSlotPosition;
     InventorySlot selectedSlot;
@@ -23,10 +24,6 @@ public class Inventory : Initializable
         if (uiComponent == null) return;
         InitializeInventory();
         uiComponent.gameObject.SetActive(false);
-    }
-    public override void Start()
-    {
-        BindKeys();
     }
 
     public void InitializeInventory()
@@ -45,20 +42,21 @@ public class Inventory : Initializable
         hoveredSlot = ItemSlots[0][0];
         hoveredSlotPosition = Vector2Int.zero;
     }
-    public void BindKeys()
-    {
-        if (uiComponent == null) return;
-        InputManager.InputActionSet.Inventory.Move.performed += MoveMenuCursor;
-        InputManager.InputActionSet.Inventory.Select.performed += SelectItem;
-    }
+
     public void OpenInventory()
     {
+        InputManager.ChangeActionMap(InputManager.InputActionSet.Inventory);
         uiComponent.gameObject.SetActive(true);
+        activeInventory = this;
+        BindKeys();
         RefreshInventoryText();
     }
-    public void CloseInventory()
+    public static void CloseOpenInventory()
     {
-        uiComponent.gameObject.SetActive(false);
+        InputManager.ChangeActionMap(InputManager.InputActionSet.Combat);
+        activeInventory.UnbindKeys();
+        activeInventory.uiComponent.gameObject.SetActive(false);
+        activeInventory = null;
     }
     public void RefreshInventoryText()
     {
@@ -82,11 +80,24 @@ public class Inventory : Initializable
     {
 
     }
+    void BindKeys()
+    {
+        if (uiComponent == null) return;
+        Debug.Log("Binding keys!");
+        InputManager.InputActionSet.Inventory.Move.performed += MoveMenuCursor;
+        InputManager.InputActionSet.Inventory.Select.performed += SelectItem;
+    }
+    void UnbindKeys()
+    {
+        Debug.Log("Unbinding!");
+        InputManager.InputActionSet.Inventory.Move.performed -= MoveMenuCursor;
+        InputManager.InputActionSet.Inventory.Select.performed -= SelectItem;
+        Debug.Log(InputManager.InputActionSet.Inventory.Move.bindings.Count);
+    }
     void MoveMenuCursor(InputAction.CallbackContext context)
     {
         Vector2 movementDirection = context.ReadValue<Vector2>();
         hoveredSlotPosition = new Vector2Int(hoveredSlotPosition.x + (int) movementDirection.x, hoveredSlotPosition.y - (int) movementDirection.y);
-        if (ItemSlots == null) Debug.Log("Item is null");
         hoveredSlot = ItemSlots[hoveredSlotPosition.y][hoveredSlotPosition.x];
         RefreshInventoryText();
     }
@@ -105,5 +116,10 @@ public class Inventory : Initializable
             selectedSlot = null;
         }
         RefreshInventoryText();
+    }
+
+    public override void Start()
+    {
+
     }
 }
