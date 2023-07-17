@@ -3,18 +3,31 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
+[RequireComponent(typeof(Animator))]
 public class Container : InteractableObject
 {
+    [HideInInspector] public bool Open;
     public Inventory ContainerInventory;
-    // Start is called before the first frame update
+    Animator animator;
+
     void Start()
     {
-        
+        animator = GetComponent<Animator>();
     }
 
     public override void Interact()
     {
-        ContainerInventory.OpenInventory();
+        if (!Open)
+        {
+            ContainerInventory.OpenInventory();
+            animator.Play("Opening");
+        }
+        else
+        {
+            ContainerInventory.CloseInventory();
+            animator.Play("Closing");
+        }
+        Open = !Open;
     }
 
 }

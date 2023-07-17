@@ -8,6 +8,7 @@ public class PlayerController : MonoBehaviour
     public static PlayerController Instance;
     public List<InteractableObject> InteractablesInRange;
     public Inventory Inventory;
+    Container openContainer;
 
     private void OnEnable()
     {
@@ -18,7 +19,6 @@ public class PlayerController : MonoBehaviour
         InputManager.InputActionSet.Combat.Inventory.performed += OpenInventory;
         InputManager.InputActionSet.Combat.Interact.performed += Interact;
         InputManager.InputActionSet.Inventory.Escape.performed += CloseInventory;
-        Inventory.RefreshInventoryText();
     }
     private void Update()
     {
@@ -29,10 +29,10 @@ public class PlayerController : MonoBehaviour
         while(InteractablesInRange.Count > 0 && DebugManager.Instance.DebugLinesActive)
         {
             yield return null;
-            DebugManager.Instance.HighlightClosestDebugCircle(transform.position);
+            DebugManager.Instance.HighlightClosestDebugCircle();
         }
         yield return null;
-        DebugManager.Instance.HighlightClosestDebugCircle(transform.position);
+        DebugManager.Instance.HighlightClosestDebugCircle();
     }
     void OpenInventory(InputAction.CallbackContext context)
     {
@@ -40,12 +40,14 @@ public class PlayerController : MonoBehaviour
     }
     void CloseInventory(InputAction.CallbackContext context)
     {
-        Inventory.CloseOpenInventory();
+        if (openContainer != null) { openContainer.Interact(); openContainer = null; }
+        else Inventory.CloseInventory();
     }
     void Interact(InputAction.CallbackContext context)
     {
         if (InteractablesInRange.Count == 0) return;
         InteractableObject closestObject = DebugManager.Instance.FindClosestOverlappingInteractable(InteractablesInRange);
+        if (closestObject is Container) openContainer = (Container)closestObject;
         closestObject.Interact();
     }
 

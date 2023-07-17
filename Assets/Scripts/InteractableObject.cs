@@ -5,7 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(DebugCircleRenderer))]
 [RequireComponent(typeof(CircleCollider2D))]
 [ExecuteAlways]
-public abstract class InteractableObject : MonoBehaviour
+public class InteractableObject : MonoBehaviour
 {
     [Min(0)]public float InteractionRadius;
 
@@ -21,6 +21,7 @@ public abstract class InteractableObject : MonoBehaviour
 
     private void OnValidate()
     {
+        if (!gameObject.activeInHierarchy) return;
         StartCoroutine(UpdateRadius());
     }
 
@@ -46,8 +47,8 @@ public abstract class InteractableObject : MonoBehaviour
         if (player == null) return;
         player.InteractablesInRange.Remove(this);
     }
-    
-    public abstract void Interact();
+
+    public virtual void Interact() { }
     
     public DebugCircleRenderer GetCircleRenderer()
     {

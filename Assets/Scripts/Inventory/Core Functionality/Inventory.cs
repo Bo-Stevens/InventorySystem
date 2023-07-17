@@ -13,7 +13,6 @@ public class Inventory : Initializable
     [SerializeField] Item itemToAdd;
     [SerializeField] Item nullItem;
     [SerializeField] InventoryUIComponent uiComponent;
-    static Inventory activeInventory;
     
     Vector2Int hoveredSlotPosition;
     InventorySlot selectedSlot;
@@ -47,17 +46,17 @@ public class Inventory : Initializable
     {
         InputManager.ChangeActionMap(InputManager.InputActionSet.Inventory);
         uiComponent.gameObject.SetActive(true);
-        activeInventory = this;
         BindKeys();
         RefreshInventoryText();
     }
-    public static void CloseOpenInventory()
+    
+    public void CloseInventory()
     {
         InputManager.ChangeActionMap(InputManager.InputActionSet.Combat);
-        activeInventory.UnbindKeys();
-        activeInventory.uiComponent.gameObject.SetActive(false);
-        activeInventory = null;
+        UnbindKeys();
+        uiComponent.gameObject.SetActive(false);
     }
+    
     public void RefreshInventoryText()
     {
         string rowContents = "";
@@ -80,20 +79,20 @@ public class Inventory : Initializable
     {
 
     }
+
     void BindKeys()
     {
         if (uiComponent == null) return;
-        Debug.Log("Binding keys!");
         InputManager.InputActionSet.Inventory.Move.performed += MoveMenuCursor;
         InputManager.InputActionSet.Inventory.Select.performed += SelectItem;
     }
+    
     void UnbindKeys()
     {
-        Debug.Log("Unbinding!");
         InputManager.InputActionSet.Inventory.Move.performed -= MoveMenuCursor;
         InputManager.InputActionSet.Inventory.Select.performed -= SelectItem;
-        Debug.Log(InputManager.InputActionSet.Inventory.Move.bindings.Count);
     }
+    
     void MoveMenuCursor(InputAction.CallbackContext context)
     {
         Vector2 movementDirection = context.ReadValue<Vector2>();
@@ -101,12 +100,14 @@ public class Inventory : Initializable
         hoveredSlot = ItemSlots[hoveredSlotPosition.y][hoveredSlotPosition.x];
         RefreshInventoryText();
     }
+    
     void SwapItemsInSlots(InventorySlot from, InventorySlot to)
     {
         Item tempItem = from.Item;
         from.Item = to.Item;
         to.Item = tempItem;
     }
+    
     void SelectItem(InputAction.CallbackContext context)
     {
         if (selectedSlot == null) selectedSlot = hoveredSlot;

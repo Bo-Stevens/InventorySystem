@@ -32,6 +32,8 @@ public class DebugCircleRenderer : MonoBehaviour
     private void OnValidate()
     {
         if (lineRenderer.positionCount == segments + 1 && oldRadius == radius) return;
+        if (!gameObject.activeInHierarchy) return;
+
         oldRadius = radius;
 
         StartCoroutine(CreatePoints());

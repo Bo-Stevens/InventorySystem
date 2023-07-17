@@ -41,7 +41,7 @@ public class DebugManager : MonoBehaviour
         }
     }
 
-    public void HighlightClosestDebugCircle(Vector3 around)
+    public void HighlightClosestDebugCircle()
     {
         if(highlightedDebugCollider != null) highlightedDebugCollider.GetCircleRenderer().lineRenderer.material.color = highlightedDebugCollider.GetCircleRenderer().baseColor;
 
@@ -72,6 +72,6 @@ public class DebugManager : MonoBehaviour
         {
             CircleRenderers[i].lineRenderer.enabled = DebugLinesActive;
         }
-
+        if (DebugLinesActive) PlayerController.Instance.StartCoroutine(PlayerController.Instance.Cycle());
     }
 }

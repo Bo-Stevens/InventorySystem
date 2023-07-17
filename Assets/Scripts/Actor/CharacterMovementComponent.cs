@@ -31,6 +31,7 @@ public class CharacterMovementComponent : MonoBehaviour
     protected float gravitationForce;
     float timeSpentHanging;
     float halfHeight;
+    float clampedDeltaTime;
     int jumpCount;
 
     public event OnCharacterMoved directionChanged;
@@ -84,14 +85,16 @@ public class CharacterMovementComponent : MonoBehaviour
 
     void MoveCharacter()
     {
+        if (Time.deltaTime > .1f) clampedDeltaTime = .1f;
+        else clampedDeltaTime = Time.deltaTime;
         if (jumpState != JumpState.Grounded)
         {
             EvaluateJumpState();
-            velocity = new Vector3(velocity.x, velocity.y - (gravitationForce * characterWeight * Time.deltaTime));
+            velocity = new Vector3(velocity.x, velocity.y - (gravitationForce * characterWeight * clampedDeltaTime));
         }
 
         Vector3 movementAmount = Util.SnapToNearestPixel(velocity, 32f);
-        transform.position += movementAmount * Time.deltaTime;
+        transform.position += movementAmount * clampedDeltaTime;
     }
 
     protected void Jump()
@@ -144,17 +147,18 @@ public class CharacterMovementComponent : MonoBehaviour
         Physics2D.OverlapCollider(characterCollider, contactFilter, collisions);
 
         bool landedOnGround = false;
+        int numCollisions = 0;
         for(int i = 0; i < collisions.Length; i++)
         {
             if (collisions[i] == null) continue;
             if (collisions[i] == characterCollider) continue;
-            if (collisions[i].tag != "MovementBlocking") continue;
             if (collisions[i].isTrigger) continue;
             ColliderDistance2D distance = collisions[i].Distance(characterCollider);
             if (distance.isOverlapped)
             {
+                numCollisions += 1;
                 Vector2 dist = distance.pointA - distance.pointB;
-                transform.position += new Vector3(dist.x, dist.y);
+                transform.position = new Vector3(Mathf.Round((transform.position.x + dist.x) * 1000f) / 1000f, Mathf.Round((transform.position.y + dist.y) * 1000f) / 1000f);
                 
                 if(Vector2.Angle(distance.normal, Vector2.up) < 90 && velocity.y <= 0 )
                 {
@@ -162,6 +166,7 @@ public class CharacterMovementComponent : MonoBehaviour
                     landedOnGround = true;
                 }
             }
+            if (numCollisions > 1) Debug.Log("Too many collisions still");
         }
 
         if (!landedOnGround && jumpState == JumpState.Grounded) Fall();
