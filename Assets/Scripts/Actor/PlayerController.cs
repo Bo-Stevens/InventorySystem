@@ -19,6 +19,7 @@ public class PlayerController : MonoBehaviour
         InputManager.InputActionSet.Combat.Inventory.performed += OpenInventory;
         InputManager.InputActionSet.Combat.Interact.performed += Interact;
         InputManager.InputActionSet.Inventory.Escape.performed += CloseInventory;
+        InputManager.InputActionSet.Inventory.TakeItem.performed += TakeItemFromInventory;
     }
     private void Update()
     {
@@ -51,4 +52,10 @@ public class PlayerController : MonoBehaviour
         closestObject.Interact();
     }
 
+    void TakeItemFromInventory(InputAction.CallbackContext context)
+    {
+        if (openContainer == null) return;
+        InventorySlot itemSlot = openContainer.Inventory.TakeSelectedItemFromInventory();
+        Inventory.AddItemToInventory(itemSlot.Item, itemSlot.StackAmount);
+    }
 }

@@ -214,6 +214,15 @@ public partial class @ControlScheme : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Take Item"",
+                    ""type"": ""Button"",
+                    ""id"": ""7e991e65-27a4-42af-8952-abe0d7b652ed"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -315,6 +324,17 @@ public partial class @ControlScheme : IInputActionCollection2, IDisposable
                     ""action"": ""Split"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f08f35d6-419e-4072-ae7d-be90d3ac5a74"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Take Item"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -346,6 +366,7 @@ public partial class @ControlScheme : IInputActionCollection2, IDisposable
         m_Inventory_Move = m_Inventory.FindAction("Move", throwIfNotFound: true);
         m_Inventory_Select = m_Inventory.FindAction("Select", throwIfNotFound: true);
         m_Inventory_Split = m_Inventory.FindAction("Split", throwIfNotFound: true);
+        m_Inventory_TakeItem = m_Inventory.FindAction("Take Item", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -474,6 +495,7 @@ public partial class @ControlScheme : IInputActionCollection2, IDisposable
     private readonly InputAction m_Inventory_Move;
     private readonly InputAction m_Inventory_Select;
     private readonly InputAction m_Inventory_Split;
+    private readonly InputAction m_Inventory_TakeItem;
     public struct InventoryActions
     {
         private @ControlScheme m_Wrapper;
@@ -482,6 +504,7 @@ public partial class @ControlScheme : IInputActionCollection2, IDisposable
         public InputAction @Move => m_Wrapper.m_Inventory_Move;
         public InputAction @Select => m_Wrapper.m_Inventory_Select;
         public InputAction @Split => m_Wrapper.m_Inventory_Split;
+        public InputAction @TakeItem => m_Wrapper.m_Inventory_TakeItem;
         public InputActionMap Get() { return m_Wrapper.m_Inventory; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -503,6 +526,9 @@ public partial class @ControlScheme : IInputActionCollection2, IDisposable
                 @Split.started -= m_Wrapper.m_InventoryActionsCallbackInterface.OnSplit;
                 @Split.performed -= m_Wrapper.m_InventoryActionsCallbackInterface.OnSplit;
                 @Split.canceled -= m_Wrapper.m_InventoryActionsCallbackInterface.OnSplit;
+                @TakeItem.started -= m_Wrapper.m_InventoryActionsCallbackInterface.OnTakeItem;
+                @TakeItem.performed -= m_Wrapper.m_InventoryActionsCallbackInterface.OnTakeItem;
+                @TakeItem.canceled -= m_Wrapper.m_InventoryActionsCallbackInterface.OnTakeItem;
             }
             m_Wrapper.m_InventoryActionsCallbackInterface = instance;
             if (instance != null)
@@ -519,6 +545,9 @@ public partial class @ControlScheme : IInputActionCollection2, IDisposable
                 @Split.started += instance.OnSplit;
                 @Split.performed += instance.OnSplit;
                 @Split.canceled += instance.OnSplit;
+                @TakeItem.started += instance.OnTakeItem;
+                @TakeItem.performed += instance.OnTakeItem;
+                @TakeItem.canceled += instance.OnTakeItem;
             }
         }
     }
@@ -546,5 +575,6 @@ public partial class @ControlScheme : IInputActionCollection2, IDisposable
         void OnMove(InputAction.CallbackContext context);
         void OnSelect(InputAction.CallbackContext context);
         void OnSplit(InputAction.CallbackContext context);
+        void OnTakeItem(InputAction.CallbackContext context);
     }
 }

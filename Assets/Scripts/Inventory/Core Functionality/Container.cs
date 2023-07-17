@@ -6,8 +6,8 @@ using UnityEngine;
 [RequireComponent(typeof(Animator))]
 public class Container : InteractableObject
 {
-    [HideInInspector] public bool Open;
-    public Inventory ContainerInventory;
+    public Inventory Inventory;
+    bool open;
     Animator animator;
 
     void Start()
@@ -17,17 +17,17 @@ public class Container : InteractableObject
 
     public override void Interact()
     {
-        if (!Open)
+        if (!open)
         {
-            ContainerInventory.OpenInventory();
+            Inventory.OpenInventory();
             animator.Play("Opening");
         }
         else
         {
-            ContainerInventory.CloseInventory();
+            Inventory.CloseInventory();
             animator.Play("Closing");
         }
-        Open = !Open;
+        open = !open;
     }
 
 }

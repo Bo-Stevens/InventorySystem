@@ -4198,10 +4198,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   InteractionRadius: 4.33
-  ContainerInventory:
-    InventoryDimensions: {x: 6, y: 6}
+  Inventory:
+    InventoryDimensions: {x: 5, y: 5}
     itemToAdd: {fileID: 11400000, guid: 4082d6e5d328e12428d3604f427b49a4, type: 2}
-    nullItem: {fileID: 11400000, guid: e8c4a84203bb8e14b802866bcb3355e8, type: 2}
     uiComponent: {fileID: 1945288319}
 --- !u!212 &708119672
 SpriteRenderer:
@@ -4904,7 +4903,6 @@ MonoBehaviour:
   Inventory:
     InventoryDimensions: {x: 6, y: 6}
     itemToAdd: {fileID: 11400000, guid: 8c818490d227e5c49898093e1df0688d, type: 2}
-    nullItem: {fileID: 11400000, guid: e8c4a84203bb8e14b802866bcb3355e8, type: 2}
     uiComponent: {fileID: 1945288319}
 --- !u!50 &1389226482
 Rigidbody2D:
@@ -5028,10 +5026,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   InteractionRadius: 5.5
-  ContainerInventory:
-    InventoryDimensions: {x: 4, y: 4}
+  Inventory:
+    InventoryDimensions: {x: 5, y: 5}
     itemToAdd: {fileID: 11400000, guid: 4082d6e5d328e12428d3604f427b49a4, type: 2}
-    nullItem: {fileID: 11400000, guid: e8c4a84203bb8e14b802866bcb3355e8, type: 2}
     uiComponent: {fileID: 1945288319}
 --- !u!212 &1754661551
 SpriteRenderer:
@@ -5526,10 +5523,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   InteractionRadius: 1.69
-  ContainerInventory:
+  Inventory:
     InventoryDimensions: {x: 0, y: 0}
     itemToAdd: {fileID: 0}
-    nullItem: {fileID: 0}
     uiComponent: {fileID: 0}
 --- !u!212 &1790988098
 SpriteRenderer:

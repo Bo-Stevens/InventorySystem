@@ -8,14 +8,13 @@ using UnityEngine;
 public class Inventory : Initializable
 {
     [HideInInspector] public InventorySlot[][] ItemSlots;
-    [HideInInspector] public InventorySlot hoveredSlot;
     public Vector2Int InventoryDimensions;
     [SerializeField] Item itemToAdd;
-    [SerializeField] Item nullItem;
     [SerializeField] InventoryUIComponent uiComponent;
     
     Vector2Int hoveredSlotPosition;
     InventorySlot selectedSlot;
+    InventorySlot hoveredSlot;
 
     public override void Initialize()
     {
@@ -33,11 +32,11 @@ public class Inventory : Initializable
             ItemSlots[x] = new InventorySlot[InventoryDimensions.y];
             for(int y = 0; y < ItemSlots[x].Length; y++)
             {
-                ItemSlots[x][y] = new InventorySlot(nullItem);
+                ItemSlots[x][y] = new InventorySlot(null, 0);
                 if (ItemSlots[x][y] == null) Debug.Log("Created null item");
             }
         }
-        ItemSlots[2][3] = new InventorySlot(itemToAdd);
+        ItemSlots[2][3] = new InventorySlot(itemToAdd, 1);
         hoveredSlot = ItemSlots[0][0];
         hoveredSlotPosition = Vector2Int.zero;
     }
@@ -61,23 +60,43 @@ public class Inventory : Initializable
     {
         string rowContents = "";
         string fullInventory = "";
+        string icon;
         for(int x = 0; x < ItemSlots.Length; x++)
         {
             for(int y = 0; y < ItemSlots[x].Length; y++)
             {
-                if(ItemSlots[x][y] == selectedSlot) rowContents += "[<color=red>" + ItemSlots[x][y].Item.ItemConsoleIcon + "</color>]";
-                else if(ItemSlots[x][y] == hoveredSlot) rowContents += "[<color=green>" + ItemSlots[x][y].Item.ItemConsoleIcon + "</color>]";
-                else rowContents += "[" + ItemSlots[x][y].Item.ItemConsoleIcon + "]";
+                if (ItemSlots[x][y].Item != null) icon = ItemSlots[x][y].Item.ItemConsoleIcon;
+                else icon = "E";
+                if(ItemSlots[x][y] == selectedSlot) rowContents += "[<color=red>" + icon + "</color>]";
+                else if(ItemSlots[x][y] == hoveredSlot) rowContents += "[<color=green>" + icon + "</color>]";
+                else rowContents += "[" + icon + "]";
             }
-            fullInventory += rowContents;
+            fullInventory += rowContents + "\n";
             rowContents = "";
         }
         uiComponent.SetText(fullInventory);
     }
 
-    public void AddItemToInventory(Item itemToAdd)
+    public void AddItemToInventory(Item itemToAdd, int count)
     {
+        InventorySlot emptySlot = FindFirstEmptySlot();
+        if(emptySlot == null)
+        {
+            Debug.LogWarning("Inventory is already full");
+            return;
+        }
+        emptySlot.Item = itemToAdd;
+        emptySlot.StackAmount = count;
+    }
 
+    public InventorySlot TakeSelectedItemFromInventory()
+    {
+        InventorySlot slotToReturn = new InventorySlot(selectedSlot.Item, selectedSlot.StackAmount);
+        selectedSlot.Item = null;
+        selectedSlot.StackAmount = 0;
+        selectedSlot = null;
+        RefreshInventoryText();
+        return slotToReturn;
     }
 
     void BindKeys()
@@ -119,6 +138,21 @@ public class Inventory : Initializable
         RefreshInventoryText();
     }
 
+    InventorySlot FindFirstEmptySlot()
+    {
+        for (int x = 0; x < ItemSlots.Length; x++)
+        {
+            for (int y = 0; y < ItemSlots.Length; y++)
+            {
+                if(ItemSlots[x][y].Item == null)
+                {
+                    return ItemSlots[x][y];
+                }
+            }
+        }
+
+        return null;
+    }
     public override void Start()
     {
 
