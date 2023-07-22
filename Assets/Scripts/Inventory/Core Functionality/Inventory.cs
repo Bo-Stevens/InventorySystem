@@ -20,7 +20,6 @@ public class Inventory : Initializable
     {
         //There is an underlying error here that we need to address
         if (UIComponent == null) return;
-        Debug.Log("Me firts?");
         InitializeInventory();
         UIComponent.gameObject.SetActive(false);
     }

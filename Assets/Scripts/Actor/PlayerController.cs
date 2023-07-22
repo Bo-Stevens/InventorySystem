@@ -25,6 +25,7 @@ public class PlayerController : MonoBehaviour
     {
 
     }
+
     public IEnumerator Cycle()
     {
         while(InteractablesInRange.Count > 0 && DebugManager.Instance.DebugLinesActive)

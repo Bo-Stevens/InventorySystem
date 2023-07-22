@@ -11,7 +11,6 @@ public class CameraController : MonoBehaviour
 
     private void Awake()
     {
-        Debug.Log("AWAKE!");
         Instance = this;
         cam = GetComponent<Camera>();
     }

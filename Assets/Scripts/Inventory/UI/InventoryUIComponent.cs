@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class InventoryUIComponent : MonoBehaviour
 {
+    [SerializeField] int itemsPerRow = 10;
     [SerializeField] TextMeshProUGUI text;
     [SerializeField] Image inventoryPanel;
     [SerializeField] GameObject itemSlotPrefab;
@@ -13,40 +14,77 @@ public class InventoryUIComponent : MonoBehaviour
     [SerializeField] Vector2 itemSlotMargin; 
     List<Image> inventorySlots;
     List<InventorySlot> itemSlots;
+    List<GameObject> uiSlots = new List<GameObject>();
+    Vector2 itemSlotPrefabScale;
+
 
     public void Initialize(List<InventorySlot> itemSlots)
     {
         this.itemSlots = itemSlots;
+        itemSlotPrefabScale = itemSlotPanel.transform.parent.GetComponent<RectTransform>().sizeDelta;
         SpawnItemSlots();
-
     }
 
-    void SpawnItemSlots()
+    public void SpawnItemSlots()
     {
         GameObject currentRow;
         GameObject itemSlot;
-        int numItems = itemSlots.Count;
         Vector2 itemSlotSize = itemSlotPrefab.GetComponent<Image>().sprite.bounds.size * itemSlotPrefab.GetComponent<RectTransform>().rect.size;
-        Vector2 panelSize = inventoryPanel.GetComponent<RectTransform>().rect.size;
-        float panelArea = panelSize.x * panelSize.y;
-        int itemSlotArea = Mathf.RoundToInt(Mathf.Sqrt(panelArea / numItems));
+        Vector2 panelSize = itemSlotPanel.GetComponent<RectTransform>().rect.size;
 
+        int numRows = Mathf.CeilToInt(panelSize.y / itemsPerRow);
         
-        float rowSize = itemSlotSize.y;
-        float columnSize = itemSlotSize.x;
+        itemSlotSize = panelSize.x / itemsPerRow * Vector2.one; 
 
-        for (int y = 0; y < 8; y++)
+        int x = 0;
+        int y = 0;
+        Vector3 positionOffset = Vector3.zero;
+        currentRow = CreateRow(y);
+
+        for (int i = 0; i < itemSlots.Count; i++)
         {
-            currentRow = new GameObject("Row " + y);
-            currentRow.transform.parent = itemSlotPanel.transform;
-            currentRow.transform.localPosition = Vector3.zero;
-            currentRow.transform.localScale = Vector3.one;
-            for (int x = 0; x < 12; x++)
+            positionOffset = new Vector3((itemSlotSize.x + itemSlotMargin.x) * x, positionOffset.y, 0);
+            if(x >= itemsPerRow)
             {
-                itemSlot = Instantiate(itemSlotPrefab, currentRow.transform);
-                itemSlot.GetComponent<RectTransform>().localPosition = Vector3.zero + new Vector3((columnSize + itemSlotMargin.x) * x, (-rowSize - itemSlotMargin.y) * y, 0);
-                itemSlot.GetComponent<RectTransform>().sizeDelta = Vector2.one * itemSlotArea;
+                x = 0;
+                y += 1;
+                positionOffset = new Vector3(0, (-itemSlotSize.y - itemSlotMargin.y) * y);
+                if (positionOffset.y - itemSlotSize.y < -panelSize.y)
+                {
+                    Debug.LogWarning("Cannot fit an inventory of size " + itemSlots.Count + " in this inventory while using square slot tiles");
+                    y -= 1;
+                    break;
+                }
+                currentRow = CreateRow(y);
             }
+
+            itemSlot = Instantiate(itemSlotPrefab, currentRow.transform);
+            itemSlot.GetComponent<RectTransform>().sizeDelta = Vector2.one * itemSlotSize;
+            itemSlot.GetComponent<RectTransform>().localPosition = Vector3.zero + positionOffset;
+            uiSlots.Add(itemSlot);
+            x += 1;
+        }
+
+        float hangingSpace = panelSize.y - ((itemSlotSize.y + itemSlotMargin.y) * (y + 1));
+        Debug.Log(hangingSpace);
+        itemSlotPanel.transform.parent.GetComponent<RectTransform>().sizeDelta = itemSlotPrefabScale - new Vector2(0, hangingSpace);
+    }
+
+    GameObject CreateRow(int rowNumber)
+    {
+        GameObject currentRow = new GameObject("Row " + rowNumber);
+        currentRow.transform.parent = itemSlotPanel.transform;
+        currentRow.transform.localPosition = Vector3.zero;
+        currentRow.transform.localScale = Vector3.one;
+        uiSlots.Add(currentRow);
+        return currentRow;
+    }
+
+    public void DestroyItemSlots()
+    {
+        for(int i = 0; i < uiSlots.Count; i++)
+        {
+            Destroy(uiSlots[i]);
         }
     }
     public void SetText(string newString)
