@@ -32,23 +32,21 @@ public class InventoryUIComponent : MonoBehaviour
         Vector2 itemSlotSize = itemSlotPrefab.GetComponent<Image>().sprite.bounds.size * itemSlotPrefab.GetComponent<RectTransform>().rect.size;
         Vector2 panelSize = itemSlotPanel.GetComponent<RectTransform>().rect.size;
 
-        int numRows = Mathf.CeilToInt(panelSize.y / itemsPerRow);
-        
-        itemSlotSize = panelSize.x / itemsPerRow * Vector2.one; 
+        itemSlotSize = (panelSize.x - itemSlotMargin.x * itemsPerRow) / (itemsPerRow ) * Vector2.one; 
 
         int x = 0;
         int y = 0;
         Vector3 positionOffset = Vector3.zero;
         currentRow = CreateRow(y);
-
+        positionOffset = new Vector3(itemSlotMargin.x / 2f, -itemSlotMargin.y / 2f);
         for (int i = 0; i < itemSlots.Count; i++)
         {
-            positionOffset = new Vector3((itemSlotSize.x + itemSlotMargin.x) * x, positionOffset.y, 0);
+            positionOffset = new Vector3((itemSlotSize.x + itemSlotMargin.x) * x + itemSlotMargin.x / 2f, positionOffset.y, 0);
             if(x >= itemsPerRow)
             {
                 x = 0;
                 y += 1;
-                positionOffset = new Vector3(0, (-itemSlotSize.y - itemSlotMargin.y) * y);
+                positionOffset = new Vector3(itemSlotMargin.x / 2f, (-itemSlotSize.y - itemSlotMargin.y) * y - itemSlotMargin.y / 2f);
                 if (positionOffset.y - itemSlotSize.y < -panelSize.y)
                 {
                     Debug.LogWarning("Cannot fit an inventory of size " + itemSlots.Count + " in this inventory while using square slot tiles");
