@@ -1,14 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 using UnityEngine;
 
-public class InventorySlot
+public class InventorySlot : MonoBehaviour
 {
     public Item Item;
     public int StackAmount;
-    public InventorySlot(Item Item, int StackAmount)
+    public Image SlotIconComponent;
+
+    private void Awake()
     {
-        this.Item = Item;
-        this.StackAmount = StackAmount;
+        Item = null;
+        StackAmount = 1;
     }
 }

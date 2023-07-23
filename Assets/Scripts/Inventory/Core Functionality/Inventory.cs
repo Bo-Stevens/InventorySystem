@@ -23,22 +23,17 @@ public class Inventory : Initializable
         InitializeInventory();
         UIComponent.gameObject.SetActive(false);
     }
-    public override void Start()
-    {
-        //There is an underlying error here that we need to address
-        if (UIComponent == null) return;
-        UIComponent.Initialize(ItemSlots);
-    }
 
     public void InitializeInventory()
     {
-        ItemSlots = new List<InventorySlot>();
-        for(int i = 0; i < InventorySize; i++)
+        ItemSlots = new List<InventorySlot>(InventorySize);
+        UIComponent.Initialize(ItemSlots);
+        for(int i = 0; i < ItemSlots.Count; i++)
         {
-            ItemSlots.Add( new InventorySlot(null, 0));
+            ItemSlots[i].Item = itemToAdd;
+            ItemSlots[i].SlotIconComponent.sprite = ItemSlots[i].Item.ItemSprite;
+            ItemSlots[i].SlotIconComponent.color = Color.white;
         }
-
-        ItemSlots[10] = new InventorySlot(itemToAdd, 1);
         hoveredSlot = ItemSlots[0];
         hoveredSlotPosition = Vector2Int.zero;
     }
@@ -71,11 +66,10 @@ public class Inventory : Initializable
 
     public InventorySlot TakeSelectedItemFromInventory()
     {
-        InventorySlot slotToReturn = new InventorySlot(selectedSlot.Item, selectedSlot.StackAmount);
         selectedSlot.Item = null;
         selectedSlot.StackAmount = 0;
         selectedSlot = null;
-        return slotToReturn;
+        return selectedSlot;
     }
 
     void BindKeys()
@@ -114,7 +108,9 @@ public class Inventory : Initializable
             selectedSlot = null;
         }
     }
-
+    public override void Start()
+    {
+    }
     InventorySlot FindFirstEmptySlot()
     {
         for(int i = 0; i < ItemSlots.Count; i++)
