@@ -6,8 +6,7 @@ using UnityEngine.UI;
 
 public class InventoryUIComponent : MonoBehaviour
 {
-    [SerializeField] int itemsPerRow = 10;
-    [SerializeField] TextMeshProUGUI text;
+    public int itemsPerRow = 10;
     [SerializeField] Image inventoryPanel;
     [SerializeField] GameObject itemSlotPrefab;
     [SerializeField] GameObject itemSlotPanel;
@@ -15,7 +14,6 @@ public class InventoryUIComponent : MonoBehaviour
     List<InventorySlot> itemSlots;
     List<GameObject> uiSlots = new List<GameObject>();
     Vector2 itemSlotPrefabScale;
-
 
     public void Initialize(List<InventorySlot> itemSlots)
     {
@@ -60,8 +58,14 @@ public class InventoryUIComponent : MonoBehaviour
             x += 1;
         }
 
-        float hangingSpace = panelSize.y - ((itemSlotSize.y + itemSlotMargin.y) * (y + 1)) - itemSlotMargin.y;
-        itemSlotPanel.transform.parent.GetComponent<RectTransform>().sizeDelta = itemSlotPrefabScale - new Vector2(0, hangingSpace);
+        
+        float newPanelHeight = (itemSlotSize.y + itemSlotMargin.y) * (y + 1) + itemSlotMargin.y;
+        //This part exists for some extra fuckery to handle the fact that there are borders around the UI panels
+        Debug.Log("Height diff " + (itemSlotPanel.transform.parent.GetComponent<RectTransform>().rect.height - itemSlotPanel.GetComponent<RectTransform>().rect.height));
+        newPanelHeight += itemSlotPanel.transform.parent.GetComponent<RectTransform>().rect.height - itemSlotPanel.GetComponent<RectTransform>().rect.height;
+
+        itemSlotPanel.transform.parent.GetComponent<RectTransform>().sizeDelta = new Vector2(itemSlotPanel.transform.parent.GetComponent<RectTransform>().sizeDelta.x, newPanelHeight);
+
     }
 
     GameObject CreateRow(int rowNumber)
@@ -82,8 +86,5 @@ public class InventoryUIComponent : MonoBehaviour
         }
         itemSlots = new List<InventorySlot>(itemSlots.Count);
     }
-    public void SetText(string newString)
-    {
-        text.text = newString;
-    }
+
 }

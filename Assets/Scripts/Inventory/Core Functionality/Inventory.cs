@@ -7,7 +7,6 @@ using UnityEngine;
 [System.Serializable]
 public class Inventory : Initializable
 {
-    [HideInInspector] public List<InventorySlot> ItemSlots;
     public int InventorySize;
     public InventoryUIComponent UIComponent;
     [SerializeField] Item itemToAdd;
@@ -16,31 +15,33 @@ public class Inventory : Initializable
     Vector2Int hoveredSlotPosition;
     InventorySlot selectedSlot;
     InventorySlot hoveredSlot;
+    List<InventorySlot> itemSlots;
 
     public override void Initialize()
     {
         //There is an underlying error here that we need to address
         if (UIComponent == null) return;
-        InitializeInventory();
         UIComponent.gameObject.SetActive(false);
+    }
+    public override void Start()
+    {
+        if (UIComponent == null) return;
+        InitializeInventory();
     }
 
     public void InitializeInventory()
     {
-        ItemSlots = new List<InventorySlot>(InventorySize);
-        UIComponent.Initialize(ItemSlots);
-        for(int i = 0; i < ItemSlots.Count; i++)
+        itemSlots = new List<InventorySlot>(InventorySize);
+        UIComponent.Initialize(itemSlots);
+        for(int i = 0; i < itemSlots.Count; i++)
         {
-            ItemSlots[i].ParentInventory = this;
+            itemSlots[i].ParentInventory = this;
         }
-        ItemSlots[0].Item = itemToAdd;
-        ItemSlots[0].SlotIconComponent.sprite = ItemSlots[0].Item.ItemSprite;
-        ItemSlots[0].SlotIconComponent.color = Color.white;
+        AddItemToInventory(itemToAdd, 1, new Vector2Int(0, 0));
+        AddItemToInventory(secondItemToAdd, 1, new Vector2Int(2, 0));
 
-        ItemSlots[5].Item = secondItemToAdd;
-        ItemSlots[5].SlotIconComponent.sprite = ItemSlots[5].Item.ItemSprite;
-        ItemSlots[5].SlotIconComponent.color = Color.white;
-        hoveredSlot = ItemSlots[0];
+
+        hoveredSlot = itemSlots[0];
         hoveredSlotPosition = Vector2Int.zero;
     }
 
@@ -77,13 +78,22 @@ public class Inventory : Initializable
         selectedSlot = null;
         return selectedSlot;
     }
+   
+    public void AddItemToInventory(Item item, int count, Vector2Int at)
+    {
+        int index = at.y * UIComponent.itemsPerRow + at.x;
+        itemSlots[index].Item = item;
+        itemSlots[index].SlotIconComponent.sprite = itemSlots[index].Item.ItemSprite;
+        itemSlots[index].SlotIconComponent.color = Color.white;
+    }
+
     InventorySlot FindFirstEmptySlot()
     {
-        for(int i = 0; i < ItemSlots.Count; i++)
+        for(int i = 0; i < itemSlots.Count; i++)
         {
-            if (ItemSlots[i].Item == null)
+            if (itemSlots[i].Item == null)
             {
-                return ItemSlots[i];
+                return itemSlots[i];
             }
         }
 
@@ -141,8 +151,5 @@ public class Inventory : Initializable
             SwapItemsInSlots(selectedSlot, hoveredSlot);
             selectedSlot = null;
         }
-    }
-    public override void Start()
-    {
     }
 }
