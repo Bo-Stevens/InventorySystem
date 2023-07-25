@@ -42,7 +42,6 @@ public class PlayerController : MonoBehaviour
     }
     void CloseInventory(InputAction.CallbackContext context)
     {
-        Debug.Log("Closing");
         if (openContainer != null) { openContainer.Interact(); openContainer = null; }
         else Inventory.CloseInventory();
     }

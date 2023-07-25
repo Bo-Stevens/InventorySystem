@@ -12,7 +12,6 @@ public class InventoryUIComponent : MonoBehaviour
     [SerializeField] GameObject itemSlotPrefab;
     [SerializeField] GameObject itemSlotPanel;
     [SerializeField] Vector2 itemSlotMargin; 
-    List<Image> inventorySlots;
     List<InventorySlot> itemSlots;
     List<GameObject> uiSlots = new List<GameObject>();
     Vector2 itemSlotPrefabScale;
@@ -38,23 +37,18 @@ public class InventoryUIComponent : MonoBehaviour
         itemSlotSize = (panelSize.x - itemSlotMargin.x * itemsPerRow - itemSlotMargin.x) / (itemsPerRow ) * Vector2.one; 
 
         currentRow = CreateRow(y);
-        positionOffset = new Vector3(itemSlotMargin.x, -itemSlotMargin.y);
+        positionOffset = new Vector3(itemSlotMargin.x + itemSlotSize.x / 2f, -itemSlotMargin.y - itemSlotSize.y / 2f);
         //This uses Capacity interestingly because of some MonoBehaviour shenanigans. I can't put anything in the List until it's created in this method
         //So I use Capcity instead of Count because Count will always be 0 when this method is run
         for (int i = 0; i < itemSlots.Capacity; i++)
         {
-            positionOffset = new Vector3((itemSlotSize.x + itemSlotMargin.x) * x + itemSlotMargin.x, positionOffset.y, 0);
+            positionOffset = new Vector3((itemSlotSize.x + itemSlotMargin.x) * x + itemSlotMargin.x + itemSlotSize.x / 2f, positionOffset.y, 0);
             if(x >= itemsPerRow)
             {
                 x = 0;
                 y += 1;
-                positionOffset = new Vector3(itemSlotMargin.x, (-itemSlotSize.y - itemSlotMargin.y) * y - itemSlotMargin.y);
-                if (positionOffset.y - itemSlotSize.y < -panelSize.y)
-                {
-                    Debug.LogWarning("Cannot fit an inventory of size " + itemSlots.Count + " in this inventory while using square slot tiles");
-                    y -= 1;
-                    break;
-                }
+                positionOffset = new Vector3(itemSlotMargin.x + itemSlotSize.x / 2f, (-itemSlotSize.y - itemSlotMargin.y) * y - itemSlotMargin.y - itemSlotSize.y / 2f);
+
                 currentRow = CreateRow(y);
             }
 
@@ -82,10 +76,11 @@ public class InventoryUIComponent : MonoBehaviour
 
     public void DestroyItemSlots()
     {
-        for(int i = 0; i < uiSlots.Count; i++)
+        for (int i = 0; i < uiSlots.Count; i++)
         {
             Destroy(uiSlots[i]);
         }
+        itemSlots = new List<InventorySlot>(itemSlots.Count);
     }
     public void SetText(string newString)
     {

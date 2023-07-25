@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Bread
   m_EditorClassIdentifier: 
   MaximumStackAmount: 64
-  ItemSprite: {fileID: 404148297, guid: 7b0150e7a7d510c41824bae84680bf5a, type: 3}
+  ItemSprite: {fileID: 118906134, guid: eaa5695e0c9dfd74f8016b9a690e01db, type: 3}
   ItemConsoleIcon: B

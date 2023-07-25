@@ -11,6 +11,7 @@ public class Inventory : Initializable
     public int InventorySize;
     public InventoryUIComponent UIComponent;
     [SerializeField] Item itemToAdd;
+    [SerializeField] Item secondItemToAdd;
     
     Vector2Int hoveredSlotPosition;
     InventorySlot selectedSlot;
@@ -30,10 +31,15 @@ public class Inventory : Initializable
         UIComponent.Initialize(ItemSlots);
         for(int i = 0; i < ItemSlots.Count; i++)
         {
-            ItemSlots[i].Item = itemToAdd;
-            ItemSlots[i].SlotIconComponent.sprite = ItemSlots[i].Item.ItemSprite;
-            ItemSlots[i].SlotIconComponent.color = Color.white;
+            ItemSlots[i].ParentInventory = this;
         }
+        ItemSlots[0].Item = itemToAdd;
+        ItemSlots[0].SlotIconComponent.sprite = ItemSlots[0].Item.ItemSprite;
+        ItemSlots[0].SlotIconComponent.color = Color.white;
+
+        ItemSlots[5].Item = secondItemToAdd;
+        ItemSlots[5].SlotIconComponent.sprite = ItemSlots[5].Item.ItemSprite;
+        ItemSlots[5].SlotIconComponent.color = Color.white;
         hoveredSlot = ItemSlots[0];
         hoveredSlotPosition = Vector2Int.zero;
     }
@@ -71,6 +77,19 @@ public class Inventory : Initializable
         selectedSlot = null;
         return selectedSlot;
     }
+    InventorySlot FindFirstEmptySlot()
+    {
+        for(int i = 0; i < ItemSlots.Count; i++)
+        {
+            if (ItemSlots[i].Item == null)
+            {
+                return ItemSlots[i];
+            }
+        }
+
+
+        return null;
+    }
 
     void BindKeys()
     {
@@ -92,11 +111,26 @@ public class Inventory : Initializable
         //hoveredSlot = ItemSlots[hoveredSlotPosition.y][hoveredSlotPosition.x];
     }
     
-    void SwapItemsInSlots(InventorySlot from, InventorySlot to)
+    public void SwapItemsInSlots(InventorySlot from, InventorySlot to)
     {
         Item tempItem = from.Item;
+        Inventory tempParentInventory = from.ParentInventory;
+        Sprite tempSprite = from.SlotIconComponent.sprite;
+        Color tempSpriteColor = from.SlotIconComponent.color;
+        int tempStackAmount = from.StackAmount;
+
         from.Item = to.Item;
+        from.ParentInventory = to.ParentInventory;
+        from.SlotIconComponent.sprite = to.SlotIconComponent.sprite;
+        from.SlotIconComponent.color = to.SlotIconComponent.color;
+        from.StackAmount = to.StackAmount;
+
         to.Item = tempItem;
+        to.ParentInventory = tempParentInventory;
+        to.SlotIconComponent.sprite = tempSprite;
+        to.SlotIconComponent.color = tempSpriteColor;
+        to.StackAmount = tempStackAmount;
+
     }
     
     void SelectItem(InputAction.CallbackContext context)
@@ -110,18 +144,5 @@ public class Inventory : Initializable
     }
     public override void Start()
     {
-    }
-    InventorySlot FindFirstEmptySlot()
-    {
-        for(int i = 0; i < ItemSlots.Count; i++)
-        {
-            if (ItemSlots[i].Item == null)
-            {
-                return ItemSlots[i];
-            }
-        }
-
-
-        return null;
     }
 }

@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Stick
   m_EditorClassIdentifier: 
   MaximumStackAmount: 5
-  itemSprite: {fileID: 0}
+  ItemSprite: {fileID: 262239407, guid: 7b0150e7a7d510c41824bae84680bf5a, type: 3}
   ItemConsoleIcon: S
